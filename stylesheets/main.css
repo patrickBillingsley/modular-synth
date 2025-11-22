@@ -1,0 +1,25 @@
+body {
+    background-color: #222;
+    color: #eee;
+}
+
+#keyboard {
+    display: flex;
+    align-items: flex-end;
+    height: 400px;
+    background-color: burlywood;
+}
+
+#keybed {
+    flex: 1;
+    display: flex;
+}
+
+.key {
+    flex: 1;
+    height: 200px;
+    background-color: ivory;
+    color: black;
+    text-align: center;
+    outline: 1px solid #222;
+}
