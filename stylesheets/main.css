@@ -71,31 +71,33 @@ body {
     color: #eee;
 }
 
+label {
+    display: block;
+    color: #222;
+}
+
 #keyboard {
-    display: flex;
-    align-items: flex-end;
     height: 400px;
     background-color: burlywood;
+    position: relative;
 }
 
 #keybed {
-    flex: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: flex;
-    position: relative;
-    height: 200px;
 }
 
 .key {
     flex: 1;
     height: 200px;
     background-color: ivory;
-    color: black;
-    text-align: center;
     outline: 1px solid #222;
 }
 
 .key.flat {
     position: absolute;
-    top: 0;
     background-color: #222;
 }

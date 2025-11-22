@@ -1,12 +1,19 @@
-import Keybed from "./components/keybed.js";
+import Manual from "./components/manual.js";
+import Keyboard from "./components/keyboard.js";
+import Knob, { KnobType } from "./components/knob.js";
 import AudioService from "./services/audio_service.js";
 
-const app = document.getElementById("app");
-const keyboard = document.createElement("div");
-keyboard.id = "keyboard";
+window.addEventListener("mousedown", new AudioService().initialize, { once: true });
 
-keyboard.addEventListener("mousedown", new AudioService().initialize, { once: true });
-
-app.appendChild(keyboard);
-
-const keybed = new Keybed({ octaves: 2 });
+new Keyboard({
+  controls: [
+    new Knob({
+      label: 'Volume',
+      type: KnobType.GAIN,
+      onChange: new AudioService().setVolume,
+    }),
+  ],
+  manuals: [
+    new Manual({}),
+  ],
+});

@@ -7,7 +7,12 @@ export default class Oscillator {
         this.gainNode = new GainNode(context);
         this.gainNode.gain.value = 0.1;
 
-        this.osc.connect(this.gainNode).connect(context.destination);
+        this.osc.connect(this.gainNode);
+    }
+
+    connect(destination) {
+        this.gainNode.connect(destination);
+        return destination;
     }
 
     play(key) {
