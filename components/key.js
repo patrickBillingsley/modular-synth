@@ -1,3 +1,4 @@
+import AudioService from "../services/audio_service.js";
 import ScreenService from "../services/screen_service.js";
 
 export default class Key {
@@ -21,14 +22,20 @@ export default class Key {
     }
 
     positionSelf() {
-        const element = document.getElementById(this.id);
-        this.#positionFlatKey(element);
+        if (this.isFlat) {
+            const element = document.getElementById(this.id);
+            this.#positionFlatKey(element);
+        }
     }
 
     #appendDomElement(id, note) {
         const element = document.createElement("div");
         element.id = id;
         element.className = `key${note.length > 1 ? " flat" : ""}`;
+
+        const audioService = new AudioService();
+        element.addEventListener("mouseover", () => audioService.play(this));
+        element.addEventListener("mouseleave", audioService.stop);
 
         return document.getElementById("keybed").appendChild(element);
     }
