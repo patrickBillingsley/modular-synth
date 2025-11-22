@@ -1,21 +1,24 @@
 import Key from "./components/key.js";
 import Oscillator from "./components/oscillator.js";
 
+document.querySelector("#app").innerHTML = `
+  <div id="keyboard">
+    <div id="keybed"></div>
+  </div>
+`;
+
 let context;
 let osc;
 
 const keys = [];
 for (let i = 0; i <= 24; i++) {
-  keys.push(new Key({ semitones: i }));
+  const key = new Key({ semitones: i });
+  keys.push(key);
 }
-
-document.querySelector("#app").innerHTML = `
-  <div id="keyboard">
-    <div id="keybed">
-      ${keys.map(k => k.component).join("")}
-    </div>
-  </div>
-`
+const flatKeys = keys.filter((k) => k.isFlat);
+for (const key of flatKeys) {
+  key.positionSelf();
+}
 
 const keybed = document.getElementById("keybed");
 keybed.addEventListener("mousedown", initialize);
