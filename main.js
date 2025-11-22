@@ -5,7 +5,7 @@ let context;
 let osc;
 
 const keys = [];
-for (let i = 0; i <= 12; i++) {
+for (let i = 0; i <= 24; i++) {
   keys.push(new Key({ semitones: i }));
 }
 
