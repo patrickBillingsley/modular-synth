@@ -2,10 +2,11 @@ import Manual from "./components/manual.js";
 import Keyboard from "./components/keyboard.js";
 import Knob, { KnobType } from "./components/knob.js";
 import AudioService from "./services/audio_service.js";
+import KeyboardInput from "./components/keyboard_input.js";
 
 window.addEventListener("mousedown", new AudioService().initialize, { once: true });
 
-new Keyboard({
+const keyboard = new Keyboard({
   controls: [
     new Knob({
       label: 'Volume',
@@ -14,6 +15,6 @@ new Keyboard({
     }),
   ],
   manuals: [
-    new Manual({}),
+    new KeyboardInput(new Manual({ octaves: 2 })),
   ],
 });

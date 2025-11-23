@@ -1,7 +1,7 @@
 import Key from "./key.js";
 
 export default class Manual {
-    constructor({ octaves = 2 }) {
+    constructor({ octaves = 1 }) {
         this.octaves = octaves;
         this.keys = [];
     }

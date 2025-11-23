@@ -101,3 +101,7 @@ label {
     position: absolute;
     background-color: #222;
 }
+
+.key.playing {
+    background-color: purple;
+}

@@ -13,7 +13,7 @@ export default class Key {
 
         if (this.note.length > 1) {
             const screenService = new ScreenService();
-            screenService.onChange(this.positionSelf.bind(this));
+            screenService.onChange(this.positionSelf);
         }
     }
 
@@ -21,23 +21,38 @@ export default class Key {
         return this.note.length > 1;
     }
 
-    positionSelf() {
+    positionSelf = () => {
         if (this.isFlat) {
             const element = document.getElementById(this.id);
             this.#positionFlatKey(element);
         }
     }
 
+    play = () => {
+        new AudioService().play(this);
+        console.log(this.element);
+        if (!this.element.classList.contains("playing")) {
+            this.element.classList.add("playing");
+        }
+    }
+
+    stop = () => {
+        new AudioService().stop();
+        if (this.element.classList.contains("playing")) {
+            this.element.classList.remove("playing");
+        }
+    }
+
     #appendDomElement(id, note) {
-        const element = document.createElement("div");
-        element.id = id;
-        element.className = `key${note.length > 1 ? " flat" : ""}`;
+        this.element = document.createElement("div");
+        this.element.id = id;
+        this.element.className = `key${note.length > 1 ? " flat" : ""}`;
 
         const audioService = new AudioService();
-        element.addEventListener("mouseover", () => audioService.play(this));
-        element.addEventListener("mouseleave", audioService.stop);
+        this.element.addEventListener("mouseover", this.play);
+        this.element.addEventListener("mouseleave", this.stop);
 
-        return document.getElementById("keybed").appendChild(element);
+        return document.getElementById("keybed").appendChild(this.element);
     }
 
     #positionFlatKey(element) {
