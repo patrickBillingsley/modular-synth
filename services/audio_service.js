@@ -10,8 +10,7 @@ export default class AudioService {
     #heldNotes = [];
 
     get #highestNote() {
-        const heldNotes = this.#heldNotes;
-        return heldNotes[heldNotes.findLastIndex(n => n)];
+        return this.#heldNotes.sort((a, b) => a.value - b.value).at(-1);
     }
 
     initialize = () => {
@@ -31,7 +30,6 @@ export default class AudioService {
         if (!this.osc) return;
 
         this.#heldNotes.push(note);
-        this.#heldNotes.sort();
         this.osc.play(this.#highestNote.freq);
     }
 
