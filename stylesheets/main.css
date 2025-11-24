@@ -81,6 +81,7 @@ label {
     height: 400px;
     background-color: burlywood;
     position: relative;
+    border-radius: 5px;
 }
 
 .manual {
@@ -89,6 +90,7 @@ label {
     right: 0;
     bottom: 0;
     display: flex;
+    background-color: black;
 }
 
 .key {
@@ -96,6 +98,7 @@ label {
     height: 200px;
     background-color: ivory;
     outline: 1px solid #222;
+    border-radius: 0 0 5px 5px;
 }
 
 .key.flat {
