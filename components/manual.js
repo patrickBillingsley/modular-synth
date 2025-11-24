@@ -1,4 +1,4 @@
-import { NOTES } from "../constants.js";
+import { NATURALS, NOTES } from "../constants.js";
 import Note from "../models/note.js";
 import Key from "./key.js";
 import KeyboardInput from "./keyboard_input.js";
@@ -108,6 +108,69 @@ export default class Manual {
         this.subscription?.cancel();
         this.subscription = this.controller?.listen(this, this.#handleInput);
 
-        this.configControls ||= this.#buildConfigControllers();
+        this.configControls ||= new ConfigControls(this);
+    }
+}
+
+class ConfigControls {
+    constructor(context) {
+        this.context = context;
+        this.build(context);
+    }
+
+    #buildNoteSelect = (context, { id, name, selection, onSelect }) => {
+        const dropdown = document.createElement("select");
+        dropdown.id = id;
+
+        for (let i = 0; i < 9; i++) {
+            for (const note of NATURALS) {
+                const option = document.createElement("option");
+                option.value = option.innerHTML = `${note}${i}`;
+                option.selected = option.value == selection;
+
+                dropdown.appendChild(option);
+            }
+        }
+
+        dropdown.addEventListener("change", ({ target: { value } }) => {
+            dropdown.blur(); // Remove focus from element to avoid interference with keyboard input
+
+            const note = value.slice(0, value.length - 1);
+            const octave = value.slice(value.length - 1);
+            onSelect(new Note(note, octave));
+        });
+
+        const label = document.createElement("label");
+        label.htmlFor = dropdown.id;
+        label.innerHTML = name;
+        label.style.color = "#eee";
+
+        context.appendChild(label).appendChild(dropdown);
+    }
+
+    build = (context) => {
+        const element = document.createElement("div");
+        element.style.display = "flex";
+
+        this.#buildNoteSelect(element, {
+            id: "start-dropdown",
+            name: "Start",
+            selection: "C4",
+            onSelect: note => {
+                this.context.start = note;
+                this.context.build();
+            },
+        });
+        this.#buildNoteSelect(element, {
+            id: "end-dropdown",
+            name: "End",
+            selection: "B5",
+            onSelect: note => {
+                this.context.end = note;
+                this.context.build();
+            },
+        });
+
+        document.getElementById("app").appendChild(element);
     }
 }
