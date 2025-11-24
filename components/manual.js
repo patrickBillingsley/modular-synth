@@ -1,7 +1,7 @@
-import { NATURALS, NOTES } from "../constants.js";
-import Note from "../models/note.js";
+import { NATURALS } from "../constants.js";
 import Key from "./key.js";
 import KeyboardInput from "./keyboard_input.js";
+import Note from "../models/note.js";
 
 
 export default class Manual {
@@ -20,71 +20,6 @@ export default class Manual {
         } else {
             key.stop();
         }
-    }
-
-    #buildConfigControllers = () => {
-        const startNote = document.createElement("select");
-        startNote.id = "start-note";
-
-        const endNote = document.createElement("select");
-        endNote.id = "end-note";
-
-        const naturals = NOTES.filter(n => n.length == 1);
-        for (let i = 0; i < 9; i++) {
-            for (const note of naturals) {
-                const value = `${note}${i}`;
-                const start = document.createElement("option");
-                start.value = value;
-                start.innerHTML = value;
-
-                const end = start.cloneNode(true);
-
-                start.selected = start.innerHTML == "C4";
-                end.selected = end.innerHTML == "C5"
-
-                startNote.appendChild(start);
-                endNote.appendChild(end);
-            }
-        }
-
-        const app = document.getElementById("app")
-        const startLabel = document.createElement("label");
-        startLabel.htmlFor = startNote.id;
-        startLabel.innerHTML = "Start";
-        startLabel.style.color = "#eee";
-        app.appendChild(startLabel);
-        app.appendChild(startNote);
-
-        const endLabel = document.createElement("label");
-        endLabel.htmlFor = startNote.id;
-        endLabel.innerHTML = "End";
-        endLabel.style.color = "#eee";
-        app.appendChild(endLabel);
-        app.appendChild(endNote);
-
-        startNote.addEventListener("change", ({ target }) => {
-            startNote.blur(); // Remove focus from element to avoid interference with keyboard input
-
-            const noteName = target.value.split("")[0];
-            const octave = target.value.split("")[1];
-            const note = new Note(noteName, octave);
-
-            this.start = note;
-            this.build();
-        });
-
-        endNote.addEventListener("change", ({ target }) => {
-            endNote.blur(); // Remove focus from element to avoid interference with keyboard input
-
-            const noteName = target.value.split("")[0];
-            const octave = target.value.split("")[1];
-            const note = new Note(noteName, octave);
-
-            this.end = note;
-            this.build();
-        });
-
-        return true;
     }
 
     build() {
@@ -157,8 +92,8 @@ class ConfigControls {
             name: "Start",
             selection: "C4",
             onSelect: note => {
-                this.context.start = note;
-                this.context.build();
+                context.start = note;
+                context.build();
             },
         });
         this.#buildNoteSelect(element, {
@@ -166,8 +101,8 @@ class ConfigControls {
             name: "End",
             selection: "B5",
             onSelect: note => {
-                this.context.end = note;
-                this.context.build();
+                context.end = note;
+                context.build();
             },
         });
 
