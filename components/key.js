@@ -55,10 +55,10 @@ export default class Key {
     }
 
     build() {
-        this.element = document.createElement("div");
+        this.element ||= document.createElement("div");
         this.element.id = this.id;
         this.element.className = `key${this.note.isFlat ? " flat" : ""}`;
 
-        document.getElementById("manual").appendChild(this.element);
+        document.getElementById("manual-1").appendChild(this.element);
     }
 }

@@ -21,7 +21,6 @@ export default class Note {
     get freq() {
         const ref = new Note("A", 4);
         const semitones = this.value - ref.value;
-        console.log(`ref: ${ref.value}, this: ${this.value}, semitones: ${semitones}`);
 
         return 440 * 2 ** (semitones / NOTES.length);
     }

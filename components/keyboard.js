@@ -1,7 +1,12 @@
+import Manual from "./manual.js";
+
 export default class Keyboard {
-    constructor({ controls = [], manuals = [] }) {
+    constructor({
+        controls = [],
+        manual = new Manual({}),
+    }) {
         this.controls = controls;
-        this.manuals = manuals;
+        this.manual = manual;
 
         this.#build();
     }
@@ -14,6 +19,6 @@ export default class Keyboard {
         app.appendChild(element);
 
         this.controls.forEach((control) => { control.build() });
-        this.manuals.forEach((manual) => { manual.build() });
+        this.manual.build();
     }
 }

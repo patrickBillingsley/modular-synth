@@ -13,25 +13,49 @@ export default class KeyboardInput {
         window.addEventListener("keyup", this.handleKeyPress);
     }
 
-    #callbacks = [];
+    #nextSubscriptionId = 0;
+    #subscriptions = [];
 
-    listen({ keys, onInput }) {
+    listen({ keys }, callback) {
+        const subscription = {
+            id: this.#nextSubscriptionId,
+            keyRef: this.#keyRefFrom(keys),
+            callback: callback,
+        };
+
+        console.log(`Subscribing to id ${subscription.id}`);
+        this.#subscriptions.push(subscription);
+        this.#nextSubscriptionId++;
+        console.log(`Subscribing count: ${this.#subscriptions.length}`);
+
+        return {
+            cancel: () => {
+                console.log(`Unsubscribing from id ${subscription.id}`);
+                const index = this.#subscriptions.indexOf(subscription);
+                if (index > -1) {
+                    this.#subscriptions.splice(index, 1);
+                }
+                console.log(`Subscribing count: ${this.#subscriptions.length}`);
+            }
+        };
+    }
+
+    #keyRefFrom(keys) {
         const keyRef = [];
         for (const key of keys) {
-            const lastKey = keyRef.at(-1);
-            if (lastKey && !lastKey.note.isFlat && !key.note.isFlat) {
-                keyRef.push(null);
+            const previousKey = keyRef.at(-1);
+            if (previousKey && !previousKey.note.isFlat && !key.note.isFlat) {
+                keyRef.push(null); // Skip non-existent Cb and Fb.
             }
             keyRef.push(key);
         }
 
-        this.#callbacks.push({ keyRef: keyRef, callback: onInput });
+        return keyRef;
     }
 
     handleKeyPress = (event) => {
-        if (!KeyboardInput.availableKeys.includes(event.key)) return;
-
         const inputIndex = KeyboardInput.availableKeys.indexOf(event.key);
+        if (inputIndex < 0) return;
 
         switch (event.type) {
             case "keypress":
@@ -44,7 +68,7 @@ export default class KeyboardInput {
                 break;
         }
 
-        for (const { keyRef, callback } of this.#callbacks) {
+        for (const { keyRef, callback } of this.#subscriptions) {
             const key = keyRef[inputIndex]
             if (!key) continue;
 

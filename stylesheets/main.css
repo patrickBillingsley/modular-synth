@@ -82,7 +82,7 @@ label {
     position: relative;
 }
 
-#manual {
+.manual {
     position: absolute;
     left: 0;
     right: 0;
