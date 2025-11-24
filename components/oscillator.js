@@ -15,8 +15,8 @@ export default class Oscillator {
         return destination;
     }
 
-    play(key) {
-        this.osc.frequency.linearRampToValueAtTime(this.#calculateFreq(key.semitones), this.context.currentTime);
+    play(freq) {
+        this.osc.frequency.linearRampToValueAtTime(freq, this.context.currentTime);
         if (!this.isPlaying) {
             this.osc.start(this.context.currentTime);
             this.isPlaying = true;
@@ -27,9 +27,5 @@ export default class Oscillator {
 
     stop() {
         this.gainNode.gain.linearRampToValueAtTime(0.0001, this.context.currentTime);
-    }
-
-    #calculateFreq(semitones = 0) {
-        return 440 * 2 ** (semitones / 12);
     }
 }

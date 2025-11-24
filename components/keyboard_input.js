@@ -1,54 +1,54 @@
-import AudioService from "../services/audio_service.js";
-
 export default class KeyboardInput {
-    inputs = {
-        "a": false,
-        "w": false,
-        "s": false,
-        "d": false,
-        "r": false,
-        "f": false,
-        "t": false,
-        "g": false,
-        "h": false,
-        "u": false,
-        "j": false,
-        "i": false,
-        "k": false,
-        "o": false,
-        "l": false,
-    };
+    static availableKeys = ["a", "w", "s", "e", "d", "r", "f", "t", "g", "y", "h", "u", "j", "i", "k", "o", "l", "p", ";"];
 
-    constructor(manual) {
-        this.manual = manual;
+    constructor() {
+        this.inputs = KeyboardInput.availableKeys.map(input => {
+            const entry = {};
+            entry[input] = false;
+
+            return entry;
+        });
 
         window.addEventListener("keypress", this.handleKeyPress);
         window.addEventListener("keyup", this.handleKeyPress);
+    }
 
-        return manual;
+    #callbacks = [];
+
+    listen({ keys, onInput }) {
+        const keyRef = [];
+        for (const key of keys) {
+            const lastKey = keyRef.at(-1);
+            if (lastKey && !lastKey.note.isFlat && !key.note.isFlat) {
+                keyRef.push(null);
+            }
+            keyRef.push(key);
+        }
+
+        this.#callbacks.push({ keyRef: keyRef, callback: onInput });
     }
 
     handleKeyPress = (event) => {
-        event.stopPropagation();
-        if (!Object.keys(this.inputs).includes(event.key)) return;
+        if (!KeyboardInput.availableKeys.includes(event.key)) return;
+
+        const inputIndex = KeyboardInput.availableKeys.indexOf(event.key);
 
         switch (event.type) {
             case "keypress":
-                if (this.inputs[event.key]) return;
+                if (this.inputs[event.key]) return; // Keeps keys from spamming when held.
 
                 this.inputs[event.key] = true;
                 break;
             case "keyup":
                 this.inputs[event.key] = false;
-                this.manual.keys[Object.keys(this.inputs).indexOf(event.key)].stop();
                 break;
         }
 
-        const lastIndex = Object.values(this.inputs).lastIndexOf(true);
-        if (lastIndex > -1) {
-            this.manual.keys[lastIndex].play();
-        } else {
-            new AudioService().stop();
+        for (const { keyRef, callback } of this.#callbacks) {
+            const key = keyRef[inputIndex]
+            if (!key) continue;
+
+            callback(key, this.inputs[event.key]);
         }
     }
 }

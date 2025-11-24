@@ -7,6 +7,13 @@ export default class AudioService {
         return AudioService.#instance ??= this;
     }
 
+    #heldNotes = [];
+
+    get #highestNote() {
+        const heldNotes = this.#heldNotes;
+        return heldNotes[heldNotes.findLastIndex(n => n)];
+    }
+
     initialize = () => {
         this.context ||= new AudioContext();
         this.osc ||= new Oscillator(this.context);
@@ -20,16 +27,26 @@ export default class AudioService {
         this.osc.connect(this.masterVol).connect(this.context.destination);
     }
 
-    play = (key) => {
+    play = (note) => {
         if (!this.osc) return;
 
-        this.osc.play(key);
+        this.#heldNotes.push(note);
+        this.#heldNotes.sort();
+        this.osc.play(this.#highestNote.freq);
     }
 
-    stop = () => {
+    stop = (note) => {
+        const index = this.#heldNotes.indexOf(note);
+        if (index > -1) {
+            this.#heldNotes.splice(index, 1);
+        }
         if (!this.osc) return;
 
-        this.osc.stop();
+        if (this.#heldNotes.some(n => n)) {
+            this.osc.play(this.#highestNote.freq);
+        } else {
+            this.osc.stop();
+        }
     }
 
     setVolume = ({ target: { value } }) => {

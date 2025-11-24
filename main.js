@@ -6,7 +6,7 @@ import KeyboardInput from "./components/keyboard_input.js";
 
 window.addEventListener("mousedown", new AudioService().initialize, { once: true });
 
-const keyboard = new Keyboard({
+new Keyboard({
   controls: [
     new Knob({
       label: 'Volume',
@@ -15,6 +15,8 @@ const keyboard = new Keyboard({
     }),
   ],
   manuals: [
-    new KeyboardInput(new Manual({ octaves: 2 })),
+    new Manual({
+      controllers: [new KeyboardInput()],
+    }),
   ],
 });

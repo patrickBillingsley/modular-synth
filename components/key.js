@@ -1,71 +1,64 @@
+import Note from "../models/note.js";
 import AudioService from "../services/audio_service.js";
 import ScreenService from "../services/screen_service.js";
 
 export default class Key {
-    static notes = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"];
+    constructor({ id, note }) {
+        this.id = id;
+        this.note = note;
 
-    constructor({ semitones = 0 }) {
-        this.semitones = semitones;
-        this.id = `key-${semitones}`;
-        this.note = this.#findNote(semitones);
-
-        this.#appendDomElement(this.id, this.note);
-
-        if (this.note.length > 1) {
+        if (note.isFlat) {
             const screenService = new ScreenService();
             screenService.onChange(this.positionSelf);
         }
+
+        this.build();
     }
 
-    get isFlat() {
-        return this.note.length > 1;
-    }
-
-    positionSelf = () => {
-        if (this.isFlat) {
-            const element = document.getElementById(this.id);
-            this.#positionFlatKey(element);
-        }
+    static fromIndex(index, { offset = 0 }) {
+        return new Key({
+            id: `key-${index}`,
+            note: Note.fromIndex(index + offset),
+        });
     }
 
     play = () => {
-        new AudioService().play(this);
-        console.log(this.element);
+        new AudioService().play(this.note);
         if (!this.element.classList.contains("playing")) {
             this.element.classList.add("playing");
         }
     }
 
     stop = () => {
-        new AudioService().stop();
+        new AudioService().stop(this.note);
         if (this.element.classList.contains("playing")) {
             this.element.classList.remove("playing");
         }
     }
 
-    #appendDomElement(id, note) {
-        this.element = document.createElement("div");
-        this.element.id = id;
-        this.element.className = `key${note.length > 1 ? " flat" : ""}`;
+    positionSelf = () => {
+        if (this.note.isFlat) {
+            const element = document.getElementById(this.id);
+            const neighbor = this.#getLeftNeighbor();
 
-        const audioService = new AudioService();
-        this.element.addEventListener("mouseover", this.play);
-        this.element.addEventListener("mouseleave", this.stop);
+            element.style.width = `${(neighbor.width / 2).toFixed()}px`;
+            element.style.height = `${(neighbor.height * 0.7).toFixed()}px`;
+            element.style.left = `${(neighbor.left + (neighbor.width * 0.75)).toFixed()}px`;
 
-        return document.getElementById("keybed").appendChild(this.element);
-    }
-
-    #positionFlatKey(element) {
-        const neighbor = document.getElementById(`key-${this.semitones - 1}`).getBoundingClientRect();
-        element.style.width = `${neighbor.width / 2}px`;
-        element.style.height = `${neighbor.height * 0.7}px`;
-        element.style.left = `${neighbor.left + (neighbor.width * 0.75)}px`;
-    }
-
-    #findNote(semitones) {
-        if (semitones < Key.notes.length) {
-            return Key.notes[semitones];
         }
-        return this.#findNote(semitones - Key.notes.length);
+    }
+
+    #getLeftNeighbor() {
+        const index = this.id.split("-").at(-1) - 1;
+        const id = `key-${index}`;
+        return document.getElementById(id).getBoundingClientRect();
+    }
+
+    build() {
+        this.element = document.createElement("div");
+        this.element.id = this.id;
+        this.element.className = `key${this.note.isFlat ? " flat" : ""}`;
+
+        document.getElementById("manual").appendChild(this.element);
     }
 }
