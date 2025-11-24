@@ -37,20 +37,22 @@ export default class Key {
     }
 
     positionSelf = () => {
-        if (this.note.isFlat) {
-            const element = document.getElementById(this.id);
-            const neighbor = this.#getLeftNeighbor();
+        if (!this.note.isFlat) return;
 
-            element.style.width = `${(neighbor.width / 2).toFixed()}px`;
-            element.style.height = `${(neighbor.height * 0.7).toFixed()}px`;
-            element.style.left = `${(neighbor.left + (neighbor.width * 0.75)).toFixed()}px`;
+        const neighbor = this.#getLeftNeighbor();
+        const appPadding = parseFloat(getComputedStyle(document.body).padding);
 
-        }
+        const element = document.getElementById(this.id);
+        element.style.width = `${neighbor.width / 2}px`;
+        element.style.height = `${neighbor.height * 0.7}px`;
+        element.style.left = `${neighbor.left - appPadding + (neighbor.width * 0.75)}px`;
+
     }
 
     #getLeftNeighbor() {
         const index = this.id.split("-").at(-1) - 1;
         const id = `key-${index}`;
+
         return document.getElementById(id).getBoundingClientRect();
     }
 

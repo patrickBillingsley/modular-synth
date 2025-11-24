@@ -63,6 +63,8 @@ export default class Manual {
         app.appendChild(endNote);
 
         startNote.addEventListener("change", ({ target }) => {
+            startNote.blur(); // Remove focus from element to avoid interference with keyboard input
+
             const noteName = target.value.split("")[0];
             const octave = target.value.split("")[1];
             const note = new Note(noteName, octave);
@@ -72,6 +74,8 @@ export default class Manual {
         });
 
         endNote.addEventListener("change", ({ target }) => {
+            endNote.blur(); // Remove focus from element to avoid interference with keyboard input
+
             const noteName = target.value.split("")[0];
             const octave = target.value.split("")[1];
             const note = new Note(noteName, octave);
@@ -100,7 +104,6 @@ export default class Manual {
         // This has to be done after generating all keys so all necessary
         // positioning information is available.
         this.keys.forEach(key => key.positionSelf());
-        // this.controller?.listen({ keys: this.keys, onInput: this.#handleInput });
 
         this.subscription?.cancel();
         this.subscription = this.controller?.listen(this, this.#handleInput);
