@@ -1,31 +1,49 @@
-import { NOTES } from "../constants.js";
+import { NOTE_NAMES } from "../constants.js";
 
 export default class Note {
-    constructor(note, octave) {
-        this.note = note;
-        this.octave = octave;
+    // Index of A440
+    // Used for calculating frequency by semitones.
+    static ref = 48;
 
-        this.isFlat = note.length > 1;
-        const noteIndex = NOTES.indexOf(note);
+    constructor(name, octave) {
+        this.name = name;
+        this.octave = octave = parseInt(octave);
+        this.isFlat = name.at(-1) == "b";
 
-        const offset = octave * NOTES.length;
-        this.value = offset + noteIndex;
+        const nameIndex = NOTE_NAMES.indexOf(name);
+        const offset = octave * NOTE_NAMES.length;
+        this.value = offset + nameIndex;
+    }
+
+    static parse(string) {
+        const name = string.slice(0, string.length - 1);
+        const octave = string.slice(string.length - 1);
+
+        return new Note(name, octave);
     }
 
     static fromIndex(index) {
-        const note = NOTES[index % NOTES.length];
-        const octave = Math.floor(index / NOTES.length);
-        return new Note(note, octave);
+        const name = NOTE_NAMES[index % NOTE_NAMES.length];
+        const octave = Math.floor(index / NOTE_NAMES.length);
+
+        return new Note(name, octave);
     }
 
     get freq() {
-        const ref = new Note("A", 4);
-        const semitones = this.value - ref.value;
+        const semitones = this.value - Note.ref;
 
-        return 440 * 2 ** (semitones / NOTES.length);
+        return 440 * 2 ** (semitones / NOTE_NAMES.length);
+    }
+
+    plus({ octaves }) {
+        return new Note(this.name, this.octave + octaves);
     }
 
     difference(other) {
         return Math.abs(this.value - other.value);
+    }
+
+    toString() {
+        return `${this.note}${this.octave}`;
     }
 }

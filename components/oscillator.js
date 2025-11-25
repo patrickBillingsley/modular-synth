@@ -28,4 +28,17 @@ export default class Oscillator {
     stop() {
         this.gainNode.gain.linearRampToValueAtTime(0.0001, this.context.currentTime);
     }
+
+    setWaveform(waveform) {
+        this.osc.type = waveform;
+    }
+}
+
+export class Waveform {
+    static SINE = "sine";
+    static SQUARE = "square";
+    static SAWTOOTH = "sawtooth";
+    static TRIANGLE = "triangle";
+
+    static get values() { return Object.values(this) };
 }

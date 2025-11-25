@@ -1,3 +1,3 @@
-export const NOTES = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"];
+export const NOTE_NAMES = ["A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab"];
 
-export const NATURALS = NOTES.filter(note => note.length == 1);
+export const NATURAL_NOTE_NAMES = NOTE_NAMES.filter(note => note.length == 1);

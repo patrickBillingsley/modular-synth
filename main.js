@@ -6,10 +6,14 @@ window.addEventListener("mousedown", new AudioService().initialize, { once: true
 
 new Keyboard({
   controls: [
-    new Knob({
-      label: 'Volume',
-      type: KnobType.GAIN,
+    Knob.continuous({
+      label: "Volume",
       onChange: new AudioService().setVolume,
+    }),
+    Knob.rotary({
+      label: "Waveform",
+      onChange: new AudioService().setWaveform,
+      options: Waveform.values,
     }),
   ],
 });

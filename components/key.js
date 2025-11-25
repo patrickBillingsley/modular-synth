@@ -61,6 +61,6 @@ export default class Key {
         this.element.id = this.id;
         this.element.className = `key${this.note.isFlat ? " flat" : ""}`;
 
-        document.getElementById("manual-1").appendChild(this.element);
+        document.getElementById("manual-0").appendChild(this.element);
     }
 }

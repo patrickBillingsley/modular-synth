@@ -52,4 +52,9 @@ export default class AudioService {
         console.log(`Volume: ${value}`);
         this.masterVol.gain.linearRampToValueAtTime(value, this.context.currentTime);
     }
+
+    setWaveform = (waveform) => {
+        console.log(`Setting waveform: ${waveform}`);
+        this.osc.setWaveform(waveform);
+    }
 }

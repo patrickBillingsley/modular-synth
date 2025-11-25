@@ -22,20 +22,15 @@ export default class KeyboardInput {
             keyRef: this.#keyRefFrom(keys),
             callback: callback,
         };
-
-        console.log(`Subscribing to id ${subscription.id}`);
         this.#subscriptions.push(subscription);
         this.#nextSubscriptionId++;
-        console.log(`Subscribing count: ${this.#subscriptions.length}`);
 
         return {
             cancel: () => {
-                console.log(`Unsubscribing from id ${subscription.id}`);
                 const index = this.#subscriptions.indexOf(subscription);
                 if (index > -1) {
                     this.#subscriptions.splice(index, 1);
                 }
-                console.log(`Subscribing count: ${this.#subscriptions.length}`);
             }
         };
     }

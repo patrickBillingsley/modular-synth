@@ -1,14 +1,16 @@
-import { NATURALS } from "../constants.js";
+import { NATURAL_NOTE_NAMES } from "../constants.js";
 import Key from "./key.js";
 import KeyboardInput from "./keyboard_input.js";
 import Note from "../models/note.js";
 
 
 export default class Manual {
-    constructor({ controllers = [new KeyboardInput()], start = new Note("C", 4), end = new Note("B", 5) }) {
+    constructor({ controllers = [new KeyboardInput()], start = "C4", end = "B5" }) {
+        start = Note.parse(start);
+        end = Note.parse(end);
         console.assert(start.value < end.value, "Start note must be lower than end note.");
 
-        this.id = "manual-1";
+        this.id = "manual-0";
         this.controller = controllers[0];
         this.start = start;
         this.end = end;
@@ -53,12 +55,12 @@ class ConfigControls {
         this.build(context);
     }
 
-    #buildNoteSelect = (context, { id, name, selection, onSelect }) => {
+    #buildNoteSelect = ({ id, name, selection, onSelect }) => {
         const dropdown = document.createElement("select");
         dropdown.id = id;
 
         for (let i = 0; i < 9; i++) {
-            for (const note of NATURALS) {
+            for (const note of NATURAL_NOTE_NAMES) {
                 const option = document.createElement("option");
                 option.value = option.innerHTML = `${note}${i}`;
                 option.selected = option.value == selection;
@@ -69,10 +71,7 @@ class ConfigControls {
 
         dropdown.addEventListener("change", ({ target: { value } }) => {
             dropdown.blur(); // Remove focus from element to avoid interference with keyboard input
-
-            const note = value.slice(0, value.length - 1);
-            const octave = value.slice(value.length - 1);
-            onSelect(new Note(note, octave));
+            onSelect(Note.parse(value));
         });
 
         const label = document.createElement("label");
@@ -80,14 +79,14 @@ class ConfigControls {
         label.innerHTML = name;
         label.style.color = "#eee";
 
-        context.appendChild(label).appendChild(dropdown);
+        this.element.appendChild(label).appendChild(dropdown);
     }
 
-    build = (context) => {
-        const element = document.createElement("div");
-        element.style.display = "flex";
+    build(context) {
+        this.element ||= document.createElement("div");
+        this.element.style.display = "flex";
 
-        this.#buildNoteSelect(element, {
+        this.#buildNoteSelect({
             id: "start-dropdown",
             name: "Start",
             selection: "C4",
@@ -96,7 +95,7 @@ class ConfigControls {
                 context.build();
             },
         });
-        this.#buildNoteSelect(element, {
+        this.#buildNoteSelect({
             id: "end-dropdown",
             name: "End",
             selection: "B5",
@@ -106,6 +105,6 @@ class ConfigControls {
             },
         });
 
-        document.getElementById("app").appendChild(element);
+        document.getElementById("app").appendChild(this.element);
     }
 }
