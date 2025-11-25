@@ -1,22 +1,24 @@
 import AudioService from "../services/audio_service.js";
 
 export default class Knob {
-    constructor({ label, type = KnobType.CONTINUOUS, onChange, options }) {
+    constructor({ label, type = KnobType.CONTINUOUS, onChange, options, value, }) {
         this.label = label;
         this.type = type;
         this.onChange = onChange;
         this.options = options;
+        this.value = value;
     }
 
-    static continuous({ label, onChange }) {
+    static continuous({ label, onChange, value }) {
         return new Knob({
             label: label,
             type: KnobType.CONTINUOUS,
             onChange: onChange,
+            value: value,
         });
     }
 
-    static rotary({ label, onChange, options }) {
+    static rotary({ label, onChange, options, value }) {
         console.assert(options, "Options must be provided for a rotary knob.");
 
         return new Knob({
@@ -24,6 +26,7 @@ export default class Knob {
             type: KnobType.ROTARY,
             onChange, onChange,
             options: options,
+            value: options.indexOf(value),
         })
     }
 
@@ -37,6 +40,7 @@ export default class Knob {
         element.id = this.id;
         element.className = "knob";
         element.name = this.label;
+        element.value = this.value;
         if (this.options) {
             element.max = this.options.length - 1;
             element.oninput = ({ target: { value } }) => this.onChange(this.options[value]);
