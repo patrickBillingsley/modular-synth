@@ -9,13 +9,12 @@ new Keyboard({
     Knob.continuous({
       label: "Volume",
       onChange: new AudioService().setVolume,
-      value: 100,
     }),
     Knob.rotary({
       label: "Waveform",
       onChange: new AudioService().setWaveform,
       options: Waveform.values,
-      value: Waveform.SINE,
+      initialValue: Waveform.SINE,
     }),
   ],
 });

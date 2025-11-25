@@ -4,6 +4,15 @@ export default class AudioService {
     static #instance;
 
     constructor() {
+        if (AudioService.#instance) {
+            return AudioService.#instance;
+        }
+
+        this.context ||= new AudioContext();
+        this.osc ||= new Oscillator(this.context);
+        this.masterVol ||= new GainNode(this.context);
+        this.masterVol.gain.value = 1;
+
         return AudioService.#instance ??= this;
     }
 
@@ -14,11 +23,6 @@ export default class AudioService {
     }
 
     initialize = () => {
-        this.context ||= new AudioContext();
-        this.osc ||= new Oscillator(this.context);
-        this.masterVol ||= new GainNode(this.context);
-        this.masterVol.gain.value = 1;
-
         this.connect();
     }
 
@@ -47,14 +51,14 @@ export default class AudioService {
         }
     }
 
-    setVolume = ({ target: { value } }) => {
+    setVolume = (value) => {
         value = (value * 0.01).toFixed(2);
         console.log(`Volume: ${value}`);
         this.masterVol.gain.linearRampToValueAtTime(value, this.context.currentTime);
     }
 
     setWaveform = (waveform) => {
-        console.log(`Setting waveform: ${waveform}`);
+        console.log(`Waveform: ${waveform}`);
         this.osc.setWaveform(waveform);
     }
 }
