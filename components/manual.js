@@ -1,11 +1,11 @@
 import { NATURAL_NOTE_NAMES } from "../constants.js";
 import Key from "./key.js";
-import KeyboardInput from "./keyboard_input.js";
+import KeyboardController from "../controllers/keyboard_controller.js";
 import Note from "../models/note.js";
 
 
 export default class Manual {
-    constructor({ controllers = [new KeyboardInput()], start = "C4", end = "B5" }) {
+    constructor({ controllers = [new KeyboardController()], start = "C4", end = "B5" }) {
         start = Note.parse(start);
         end = Note.parse(end);
         console.assert(start.value < end.value, "Start note must be lower than end note.");

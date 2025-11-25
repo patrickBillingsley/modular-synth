@@ -1,8 +1,8 @@
-export default class KeyboardInput {
+export default class KeyboardController {
     static availableKeys = ["a", "w", "s", "e", "d", "r", "f", "t", "g", "y", "h", "u", "j", "i", "k", "o", "l", "p", ";"];
 
     constructor() {
-        this.inputs = KeyboardInput.availableKeys.map(input => {
+        this.inputs = KeyboardController.availableKeys.map(input => {
             const entry = {};
             entry[input] = false;
 
@@ -49,7 +49,7 @@ export default class KeyboardInput {
     }
 
     handleKeyPress = (event) => {
-        const inputIndex = KeyboardInput.availableKeys.indexOf(event.key);
+        const inputIndex = KeyboardController.availableKeys.indexOf(event.key);
         if (inputIndex < 0) return;
 
         switch (event.type) {
