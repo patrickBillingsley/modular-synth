@@ -1,9 +1,8 @@
-import AudioService from "../services/audio_service.js";
+import { ArgumentError } from "../errors.js";
 
 export default class Knob {
-    constructor({ label, type = KnobType.CONTINUOUS, onChange, options, initialValue, }) {
+    constructor({ label, onChange, options, initialValue, }) {
         this.label = label;
-        this.type = type;
         this.onChange = onChange;
         this.options = options;
         this.initialValue = initialValue;
@@ -12,18 +11,18 @@ export default class Knob {
     static continuous({ label, onChange, initialValue }) {
         return new Knob({
             label: label,
-            type: KnobType.CONTINUOUS,
             onChange: onChange,
             initialValue: initialValue,
         });
     }
 
     static rotary({ label, onChange, options, initialValue }) {
-        console.assert(options, "Options must be provided for a rotary knob.");
+        if (!options) {
+            throw new ArgumentError("options", "Cannot be empty.", new Error().stack);
+        }
 
         return new Knob({
             label: label,
-            type: KnobType.ROTARY,
             onChange, onChange,
             options: options,
             initialValue: options.indexOf(initialValue),
@@ -33,33 +32,27 @@ export default class Knob {
     get id() { `${this.label}-knob` };
 
     build = () => {
-        const keyboard = document.getElementById("keyboard");
-
-        const element = document.createElement("input");
-        element.type = "range";
-        element.id = this.id;
-        element.className = "knob";
-        element.name = this.label;
-        element.value = this.initialValue;
+        this.element = document.createElement("input");
+        this.element.type = "range";
+        this.element.id = this.id;
+        this.element.className = "knob";
+        this.element.name = this.label;
+        this.element.value = this.initialValue;
         if (this.options) {
-            element.max = this.options.length - 1;
-            element.oninput = ({ target: { value } }) => this.onChange(this.options[value]);
+            this.element.max = this.options.length - 1;
+            this.element.oninput = ({ target: { value } }) => this.onChange(this.options[value]);
         } else {
-            element.oninput = ({ target: { value } }) => this.onChange(value);
+            this.element.oninput = ({ target: { value } }) => this.onChange(value);
         }
 
-        this.onChange(element.value);
+        this.onChange(this.element.value);
 
         const label = document.createElement("label");
         label.htmlFor = this.id;
         label.innerHTML = this.label;
 
+        const keyboard = document.getElementById("keyboard");
         keyboard.appendChild(label);
-        keyboard.appendChild(element);
+        keyboard.appendChild(this.element);
     }
-}
-
-export class KnobType {
-    static CONTINUOUS = "continuous";
-    static ROTARY = "rotary";
 }

@@ -1,22 +1,18 @@
 import Manual from "./manual.js";
 
 export default class Keyboard {
-    constructor({
-        controls = [],
-        manual = new Manual({}),
-    }) {
-        this.controls = controls;
-        this.manual = manual;
+    constructor({ controls, manual }) {
+        this.controls = controls || [];
+        this.manual = manual || new Manual({});
 
-        this.#build();
+        this.build();
     }
 
-    #build() {
-        const app = document.getElementById("app");
-        const element = document.createElement("div");
-        element.id = "keyboard";
+    build = () => {
+        this.element = document.createElement("div");
+        this.element.id = "keyboard";
 
-        app.appendChild(element);
+        document.getElementById("app").appendChild(this.element);
 
         this.controls.forEach((control) => { control.build() });
         this.manual.build();

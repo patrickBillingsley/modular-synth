@@ -2,7 +2,7 @@ export default class KeyboardController {
     static availableKeys = ["a", "w", "s", "e", "d", "r", "f", "t", "g", "y", "h", "u", "j", "i", "k", "o", "l", "p", ";"];
 
     constructor() {
-        this.inputs = KeyboardController.availableKeys.map(input => {
+        this.inputs = KeyboardController.availableKeys.map((input) => {
             const entry = {};
             entry[input] = false;
 
@@ -16,7 +16,7 @@ export default class KeyboardController {
     #nextSubscriptionId = 0;
     #subscriptions = [];
 
-    listen({ keys }, callback) {
+    listen = ({ keys }, callback) => {
         const subscription = {
             id: this.#nextSubscriptionId,
             keyRef: this.#keyRefFrom(keys),
@@ -33,19 +33,6 @@ export default class KeyboardController {
                 }
             }
         };
-    }
-
-    #keyRefFrom(keys) {
-        const keyRef = [];
-        for (const key of keys) {
-            const previousKey = keyRef.at(-1);
-            if (previousKey && !previousKey.note.isFlat && !key.note.isFlat) {
-                keyRef.push(null); // Skip non-existent Cb and Fb.
-            }
-            keyRef.push(key);
-        }
-
-        return keyRef;
     }
 
     handleKeyPress = (event) => {
@@ -69,5 +56,18 @@ export default class KeyboardController {
 
             callback(key, this.inputs[event.key]);
         }
+    }
+
+    #keyRefFrom = (keys) => {
+        const keyRef = [];
+        for (const key of keys) {
+            const previousKey = keyRef.at(-1);
+            if (previousKey && !previousKey.note.isFlat && !key.note.isFlat) {
+                keyRef.push(null); // Skip non-existent Cb and Fb.
+            }
+            keyRef.push(key);
+        }
+
+        return keyRef;
     }
 }

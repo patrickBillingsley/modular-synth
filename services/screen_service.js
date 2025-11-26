@@ -1,14 +1,16 @@
 export default class ScreenService {
     static #instance;
 
-    callbacks = [];
+    #callbacks = [];
 
     constructor() {
         if (ScreenService.#instance) {
-            return ScreenService.#instance ??= this;
+            return ScreenService.#instance;
         }
 
-        window.addEventListener('resize', this.notifyListeners.bind(this));
+        window.addEventListener('resize', this.notifyListeners);
+
+        return ScreenService.#instance = this;
     }
 
     get availWidth() {
@@ -16,12 +18,12 @@ export default class ScreenService {
     }
 
 
-    onChange(callback) {
-        this.callbacks.push(callback);
+    onChange = (callback) => {
+        this.#callbacks.push(callback);
     }
 
-    notifyListeners() {
-        for (const callback of this.callbacks) {
+    notifyListeners = () => {
+        for (const callback of this.#callbacks) {
             callback(this.availWidth);
         }
     }

@@ -23,14 +23,14 @@ export default class Key {
     }
 
     play = () => {
-        new AudioService().play(this.note);
+        AudioService.play(this.note);
         if (!this.element.classList.contains("playing")) {
             this.element.classList.add("playing");
         }
     }
 
     stop = () => {
-        new AudioService().stop(this.note);
+        AudioService.stop(this.note);
         if (this.element.classList.contains("playing")) {
             this.element.classList.remove("playing");
         }

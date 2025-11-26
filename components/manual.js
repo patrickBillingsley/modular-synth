@@ -2,13 +2,20 @@ import { NATURAL_NOTE_NAMES } from "../constants.js";
 import Key from "./key.js";
 import KeyboardController from "../controllers/keyboard_controller.js";
 import Note from "../models/note.js";
+import { ArgumentError } from "../errors.js";
 
 
 export default class Manual {
-    constructor({ controllers = [new KeyboardController()], start = "C4", end = "B5" }) {
-        start = Note.parse(start);
-        end = Note.parse(end);
-        console.assert(start.value < end.value, "Start note must be lower than end note.");
+    constructor({ controllers = [new KeyboardController()], start = Note.parse("C4"), end = Note.parse("B5") }) {
+        if (!start) {
+            throw new ArgumentError("start", "Cannot be null.", new Error().stack);
+        }
+        if (!end) {
+            throw new ArgumentError("end", "Cannot be null.", new Error().stack);
+        }
+        if (start.value > end.value) {
+            throw new ArgumentError("end", "Must be higher than start.", new Error().stack);
+        }
 
         this.id = "manual-0";
         this.controller = controllers[0];
