@@ -16,6 +16,7 @@ export default class Oscillator extends Logging(Node) {
 
         this.level = 0.5;
         this.output.gain.value = 0.0001;
+        this.input.start(this.context.currentTime);
 
         this.input.connect(this.output);
     }
@@ -31,21 +32,21 @@ export default class Oscillator extends Logging(Node) {
 
     play = (freq) => {
         this.log(`Playing ${freq}`);
-        if (!this.#isPlaying) {
-            this.input.start(this.context.currentTime);
-            this.#isPlaying = true;
-        }
-
         this.input.frequency.linearRampToValueAtTime(freq, this.context.currentTime);
         this.output.gain.linearRampToValueAtTime(this.level, this.context.currentTime);
+        this.#isPlaying = true;
     }
 
     stop = () => {
         this.output.gain.linearRampToValueAtTime(0.0001, this.context.currentTime);
+        this.#isPlaying = false;
     }
 
     setVolume = (level) => {
         this.level = level;
+        if (this.#isPlaying) {
+            this.output.gain.linearRampToValueAtTime(this.level, this.context.currentTime);
+        }
     }
 
     setWaveform = (waveform) => {

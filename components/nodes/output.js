@@ -16,16 +16,16 @@ export default class Output extends Node {
         this.input = this.context.createGain();
         this.output = this.context.destination;
 
-        this.volume = 0.5;
-        this.input.gain.value = this.volume;
+        this.level = 0.1;
+        this.input.gain.value = this.level;
 
         this.input.connect(this.output);
     }
 
     setLevel = (level) => {
         this.log(`Master Volume: ${level}`);
-        this.volume = level;
-        this.input.gain.linearRampToValueAtTime(this.volume, this.context.currentTime);
+        this.level = level;
+        this.input.gain.linearRampToValueAtTime(this.level, this.context.currentTime);
     }
 
     build = () => {
