@@ -55,8 +55,27 @@ label {
     }
 }
 
+#control-panel {
+    display: flex;
+}
+
 .knob {
-    @include knob.knob();
+    @include knob.knob($size: 533,
+        $unit: 0.15px,
+        $geometry: (knob-size: 300,
+            knob-pseudo-size: 100,
+            knob-tip-size: 9%,
+            knob-border-width: 1.6%,
+            ticks-radius: 38.5931,
+            digits-radius: 45.03726,
+            ticks-width: 12,
+            ticks-height: 32,
+            ticks-step-height: 40,
+            alt-dots: 10,
+            alt-offset-bottom: 13,
+            alt-offset-bottom-text: 12.5,
+            alt-offset-center: 18.78,
+            alt-offset-center-text: 18.28));
 
     --outline-color: rgba(0, 100, 200, 0.5);
     --outline-width: 3em;
@@ -65,4 +84,10 @@ label {
     --knob-shadow: rgba(0, 0, 0, 0.6);
     --knob-face-gradient: linear-gradient(#f1f1f1, #fff);
     --knob-border-gradient: linear-gradient(#fff 34%, #d1d1d1);
+
+    &-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }

@@ -70,7 +70,6 @@
     background-image: create-shadows($size,
             map.get($geometry, "knob-size"),
             $colors),
-        create-digits-layer(5260, $steps, $angles, $colors, $geometry),
         create-alt(520, $colors, $geometry, $hints),
         create-ticks(5260, $ticks, $steps, $angles, $colors, $geometry);
     background-position: 0 0;

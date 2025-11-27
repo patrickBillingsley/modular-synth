@@ -71,12 +71,17 @@ export default class Knob {
         // Initialize CSS custom properties before appending to DOM
         this.update();
 
+        this.container = document.createElement("div");
+        this.container.className = "knob-container";
+
         const label = document.createElement("label");
         label.htmlFor = this.id;
         label.innerHTML = this.label;
 
-        const keyboard = document.getElementById("keyboard");
-        keyboard.appendChild(label);
-        keyboard.appendChild(this.element);
+        this.container.appendChild(label);
+        this.container.appendChild(this.element);
+
+        const controlPanel = document.getElementById("control-panel");
+        controlPanel.appendChild(this.container);
     }
 }

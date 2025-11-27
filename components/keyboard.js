@@ -14,6 +14,9 @@ export default class Keyboard {
     build = () => {
         this.element = document.createElement("div");
         this.element.id = "keyboard";
+        const controlPanel = document.createElement("div");
+        controlPanel.id = "control-panel";
+        this.element.appendChild(controlPanel);
         document.getElementById("app").appendChild(this.element);
 
         new Output().build();
