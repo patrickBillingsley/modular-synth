@@ -1,9 +1,12 @@
 import Manual from "./manual.js";
+import AudioService from "../services/audio_service.js";
+import Output from "./nodes/output.js";
 
 export default class Keyboard {
-    constructor({ controls, manual }) {
-        this.controls = controls || [];
+    constructor({ manual, voices = 1, polyphonic = false }) {
         this.manual = manual || new Manual({});
+        this.voices = voices;
+        this.polyphonic = polyphonic;
 
         this.build();
     }
@@ -11,10 +14,10 @@ export default class Keyboard {
     build = () => {
         this.element = document.createElement("div");
         this.element.id = "keyboard";
-
         document.getElementById("app").appendChild(this.element);
 
-        this.controls.forEach((control) => { control.build() });
+        new Output().build();
+        new AudioService().generateOscillators(this.voices, this.polyphonic);
         this.manual.build();
     }
 }

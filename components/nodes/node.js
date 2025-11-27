@@ -1,5 +1,6 @@
 import { ArgumentError, UnimplementedError } from '../../errors.js';
 import { Logging } from '../../mixins/logging.js';
+import AudioService from '../../services/audio_service.js';
 
 /** 
  * Represents an AudioNode. 
@@ -24,17 +25,11 @@ export default class Node extends Logging(Object) {
      * 
      * @param {AudioContext} context
      */
-    constructor(context) {
+    constructor() {
         super();
         if (this.constructor == Node) {
             throw new Error('Abstract classes cannot be instantiated.');
         }
-
-        if (!(context instanceof AudioContext)) {
-            throw new ArgumentError('context', 'AudioContext');
-        }
-
-        this.context = context;
     }
 
     /**

@@ -6,7 +6,7 @@ import { ArgumentError } from "../errors.js";
 
 
 export default class Manual {
-    constructor({ controllers = [new KeyboardController()], start = Note.parse("C4"), end = Note.parse("B5") }) {
+    constructor({ controllers, start = Note.parse("C4"), end = Note.parse("B5") }) {
         if (!start) {
             throw new ArgumentError("start", "Cannot be null.", new Error().stack);
         }
@@ -18,9 +18,14 @@ export default class Manual {
         }
 
         this.id = "manual-0";
-        this.controller = controllers[0];
+        this.controller = controllers ? controllers[0] : new KeyboardController({});
         this.start = start;
         this.end = end;
+        this.keys = [];
+        for (let i = 0; i <= this.start.difference(this.end); i++) {
+            const key = Key.fromIndex(i, { offset: this.start.value });
+            this.keys.push(key);
+        }
     }
 
     #handleInput(key, pressed) {
@@ -32,7 +37,6 @@ export default class Manual {
     }
 
     build() {
-        this.keys = [];
         this.element?.remove();
         this.element = document.createElement("div");
         this.element.id = this.id;
@@ -40,11 +44,7 @@ export default class Manual {
 
         keyboard.appendChild(this.element);
 
-        for (let i = 0; i <= this.start.difference(this.end); i++) {
-            const key = Key.fromIndex(i, { offset: this.start.value });
-            this.keys.push(key);
-        }
-
+        this.keys.forEach(key => key.build());
         // This has to be done after generating all keys so all necessary
         // positioning information is available.
         this.keys.forEach(key => key.positionSelf());

@@ -1,18 +1,27 @@
 import { ArgumentError } from "../errors.js";
 
 export default class Knob {
-    constructor({ label, onChange, options, initialValue, }) {
+    constructor({ label, onChange, options, node, initialValue }) {
         this.label = label;
-        this.onChange = onChange;
         this.options = options;
-        this.initialValue = initialValue;
+        this.node = node;
+        this.initialValue = initialValue ?? node.level;
+
+        this.onChange = (value) => {
+            if (options) {
+                onChange(options[value]);
+            } else {
+                value = (value * 0.01).toFixed(2);
+                onChange(value);
+            }
+        }
     }
 
-    static continuous({ label, onChange, initialValue }) {
+    static continuous({ label, onChange, node }) {
         return new Knob({
             label: label,
             onChange: onChange,
-            initialValue: initialValue,
+            node: node,
         });
     }
 
@@ -37,15 +46,12 @@ export default class Knob {
         this.element.id = this.id;
         this.element.className = "knob";
         this.element.name = this.label;
-        this.element.value = this.initialValue;
+        this.element.value = this.initialValue * 100;
         if (this.options) {
             this.element.max = this.options.length - 1;
-            this.element.oninput = ({ target: { value } }) => this.onChange(this.options[value]);
-        } else {
-            this.element.oninput = ({ target: { value } }) => this.onChange(value);
         }
 
-        this.onChange(this.element.value);
+        this.element.oninput = ({ target: { value } }) => { this.onChange(value) };
 
         const label = document.createElement("label");
         label.htmlFor = this.id;

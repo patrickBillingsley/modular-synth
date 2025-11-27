@@ -11,8 +11,6 @@ export default class Key {
             const screenService = new ScreenService();
             screenService.onChange(this.positionSelf);
         }
-
-        this.build();
     }
 
     static fromIndex(index, { offset = 0 }) {
@@ -23,14 +21,14 @@ export default class Key {
     }
 
     play = () => {
-        AudioService.play(this.note);
+        new AudioService().play(this.note);
         if (!this.element.classList.contains("playing")) {
             this.element.classList.add("playing");
         }
     }
 
     stop = () => {
-        AudioService.stop(this.note);
+        new AudioService().stop(this.note);
         if (this.element.classList.contains("playing")) {
             this.element.classList.remove("playing");
         }
@@ -56,7 +54,7 @@ export default class Key {
         return document.getElementById(id).getBoundingClientRect();
     }
 
-    build() {
+    build = () => {
         this.element ||= document.createElement("div");
         this.element.id = this.id;
         this.element.className = `key${this.note.isFlat ? " flat" : ""}`;

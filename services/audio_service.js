@@ -1,4 +1,3 @@
-import Gain from "../components/nodes/gain.js";
 import Oscillator from "../components/nodes/oscillator.js";
 import Output from "../components/nodes/output.js";
 import { Logging } from "../mixins/logging.js";
@@ -12,59 +11,66 @@ export default class AudioService extends Logging(Object) {
         }
 
         super();
+        AudioService.#instance = this;
         this.context = new AudioContext();
-        this.osc = new Oscillator(this.context);
-        this.volumes = [new Gain(this.context, {})];
-        this.output = new Output(this.context);
-
-        return AudioService.#instance ||= this;
+        this.output = new Output();
+        this.oscillators = [];
     }
 
     #heldNotes = [];
 
-    get masterVol() { return this.volumes[0] }
     get highestNote() {
         return this.#heldNotes.sort((a, b) => a.value - b.value).at(-1)
     }
 
     initialize = () => {
         try {
-            this.osc.connect(this.masterVol).connect(this.output);
+            for (const oscillator of this.oscillators) {
+                oscillator.connect(this.output);
+            }
             this.log("Successfully initialized.");
         } catch (err) {
             this.log("Failed to initialize.", err);
         }
     }
 
-    static play = (note) => {
-        if (!AudioService.#instance.osc) return;
-
-        AudioService.#instance.#heldNotes.push(note);
-        AudioService.#instance.osc.play(AudioService.#instance.highestNote.freq);
+    play = (note) => {
+        this.log(`${note} pressed.`);
+        this.#heldNotes.push(note);
+        for (const oscillator of this.oscillators) {
+            this.log(`Playing ${this.highestNote}.`);
+            oscillator.play(this.highestNote.freq);
+        }
     }
 
-    static stop = (note) => {
-        const index = AudioService.#instance.#heldNotes.indexOf(note);
+    stop = (note) => {
+        const index = this.#heldNotes.indexOf(note);
         if (index > -1) {
-            AudioService.#instance.#heldNotes.splice(index, 1);
+            this.#heldNotes.splice(index, 1);
         }
-        if (!AudioService.#instance.osc) return;
 
-        if (AudioService.#instance.#heldNotes.some(n => n)) {
-            AudioService.#instance.osc.play(AudioService.#instance.highestNote.freq);
+        if (this.#heldNotes.some(n => n)) {
+            for (const oscillator of this.oscillators) {
+                oscillator.play(this.highestNote.freq);
+            }
         } else {
-            AudioService.#instance.osc.stop();
+            for (const oscillator of this.oscillators) {
+                oscillator.stop();
+            }
         }
     }
 
-    static setMasterVolume = (value) => {
-        value = (value * 0.01).toFixed(2);
-        AudioService.#instance.log(`Master Volume: ${value}`);
-        AudioService.#instance.masterVol.setLevel(value);
-    }
+    generateOscillators = (count) => {
+        if (this.oscillators.length >= count) {
+            return;
+        }
 
-    static setWaveform = (waveform) => {
-        AudioService.#instance.log(`Waveform: ${waveform}`);
-        AudioService.#instance.osc.setWaveform(waveform);
+        this.log(`Generating ${this.oscillators.length + 1} of ${count} oscillators.`);
+        const oscillator = new Oscillator();
+        oscillator.connect(this.output);
+        oscillator.build();
+        this.oscillators.push(oscillator);
+
+        return this.generateOscillators(count);
     }
 }

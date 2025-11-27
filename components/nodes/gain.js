@@ -1,3 +1,4 @@
+import AudioService from "../../services/audio_service.js";
 import Node from "./node.js";
 
 /**
@@ -6,29 +7,26 @@ import Node from "./node.js";
 export default class Gain extends Node {
     /**
      * 
-     * @param {AudioContext} context 
      * @param {number} [initialValue = 1] 
      */
-    constructor(context, { initialValue = 1 }) {
-        if (initialValue < 0) {
-            initialValue = 0;
-        } else if (initialValue > 1) {
-            initialValue = 1;
-        }
+    constructor() {
+        super();
+        this.context = new AudioService().context;
+        this.input = this.context.createGain();
+        this.output = this.input;
 
-        super(context);
-        this.node = new GainNode(context);
-        this.node.gain.value = initialValue;
+        this.level = 0.5;
+        this.input.gain.value = this.level;
     }
 
-    connect = (node) => {
-        this.log(`Connecting to ${node.constructor.name}`);
-        this.node.connect(node.node);
-        return node;
+    connect = (destination) => {
+        this.log(`Connecting to ${destination.constructor.name}`);
+        this.output.connect(destination.input);
+        return destination;
     }
 
     setLevel = (level) => {
-        this.node.gain.linearRampToValueAtTime(level, this.context.currentTime);
+        this.input.gain.linearRampToValueAtTime(level, this.context.currentTime);
         return this;
     }
 }
