@@ -1,0 +1,120 @@
+/* -- START RESET -- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        interpolate-size: allow-keywords;
+    }
+}
+
+body {
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+p {
+    text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    text-wrap: balance;
+}
+
+#root,
+#__next {
+    isolation: isolate;
+}
+
+/* -- END RESET -- */
+
+// Variables
+$color-dark: #222;
+$color-light: #eee;
+$color-black: black;
+$color-ivory: ivory;
+$color-burlywood: burlywood;
+$color-purple: purple;
+$spacing-base: 24px;
+$border-radius: 5px;
+$key-height: 200px;
+
+// Main Styles
+body {
+    background-color: $color-dark;
+    color: $color-light;
+    padding: $spacing-base;
+}
+
+label {
+    display: block;
+    color: $color-dark;
+}
+
+#keyboard {
+    background-color: $color-burlywood;
+    border-radius: $border-radius;
+}
+
+.manual {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    background-color: $color-black;
+}
+
+.key {
+    flex: 1;
+    height: $key-height;
+    background-color: $color-ivory;
+    outline: 1px solid $color-dark;
+    border-radius: 0 0 $border-radius $border-radius;
+
+    &.flat {
+        position: absolute;
+        background-color: $color-dark;
+    }
+
+    &.playing {
+        background-color: $color-purple;
+    }
+}
