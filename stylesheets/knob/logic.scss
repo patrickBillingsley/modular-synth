@@ -1,0 +1,32 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+@use 'sass:list';
+
+@function devide($n, $dn) {
+    @return math.div($n, $dn);
+}
+
+@function rgb-color($color) {
+    $r: color.red($color);
+    $g: color.green($color);
+    $b: color.blue($color);
+    $a: color.alpha($color);
+
+    @return "rgba(#{$r},#{$g},#{$b},#{$a})";
+}
+
+@function split($number) {
+    $string: meta.inspect($number);
+    $limit: string.length($string);
+    $result-list: (
+    );
+
+@for $i from 1 through $limit {
+    $val: string.slice($string, $i, $i);
+    $result-list: list.append($result-list, $val, "comma");
+}
+
+@return $result-list;
+}

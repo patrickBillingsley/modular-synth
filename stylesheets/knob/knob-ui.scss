@@ -1,0 +1,91 @@
+@use 'sass:map';
+@use 'logic' as *;
+@use 'svg-utils' as *;
+
+@mixin knob-thumb($colors) {
+    width: calc(var(--knob-pseudo-size) * 1em);
+    height: calc(var(--knob-pseudo-size) * 1em);
+    box-sizing: border-box;
+    padding: calc(var(--knob-border-width) / var(--knob-scale));
+    border-radius: 50%;
+
+    box-shadow: 0 0 0 0 var(--knob-shadow);
+    outline: solid var(--outline-color);
+    outline-width: 0;
+
+    background-image: svg-container(20,
+        '%3Cdiv class="c-i"%3E%3C/div%3E',
+        '.c-i{border-radius:50px;background:#{rgb-color(map.get($colors, "knob-pointer"))}}'
+    ),
+    var(--knob-face-gradient),
+    var(--knob-border-gradient);
+    background-size: var(--knob-tip-size) var(--knob-tip-size), 100% 100%,
+        100% 100%;
+    background-position: left 50% bottom 10%, 0 0, 0 0;
+    background-repeat: no-repeat;
+    background-clip: border-box, content-box, border-box;
+    background-origin: content-box, border-box, border-box;
+
+    transition-duration: 100ms, 50ms, var(--drag-duration);
+    transition-timing-function: ease-out, ease-out, var(--drag-timing-func);
+    pointer-events: auto;
+    cursor: var(--cur-drag);
+}
+
+@mixin kbon-thumb-hover {
+    box-shadow: 0 0 7em 0 var(--knob-shadow);
+}
+
+@mixin knob-ui($colors) {
+    &::-webkit-slider-thumb {
+        @include knob-thumb($colors);
+
+        left: var(--translate, 0);
+        top: var(--center, 0);
+        transform: rotate(calc(var(--start-angle, 0) * 1deg)) rotate(var(--current-angle, 0)) scale(var(--knob-scale));
+        transition-property: box-shadow, outline, transform;
+    }
+
+    &::-moz-range-thumb {
+        @include knob-thumb($colors);
+
+        translate: var(--translate, 0) 0;
+        scale: var(--knob-scale);
+        rotate: calc((var(--start-angle, 0) * 1deg) + var(--current-angle, 0));
+        transition-property: box-shadow, outline, rotate;
+    }
+
+    &:hover {
+        &::-moz-range-thumb {
+            @include kbon-thumb-hover;
+        }
+
+        &::-webkit-slider-thumb {
+            @include kbon-thumb-hover;
+        }
+    }
+
+    &:active {
+        cursor: var(--cur-dragging);
+    }
+
+    &::-moz-range-thumb:active {
+        cursor: var(--cur-dragging);
+    }
+
+    &::-webkit-slider-thumb:active {
+        cursor: var(--cur-dragging);
+    }
+
+    &:focus-visible {
+        outline: none;
+
+        &::-moz-range-thumb {
+            outline-width: var(--outline-width);
+        }
+
+        &::-webkit-slider-thumb {
+            outline-width: var(--outline-width);
+        }
+    }
+}

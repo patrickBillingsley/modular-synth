@@ -1,0 +1,45 @@
+@use 'logic' as *;
+
+@function svg-container($size: 100, $content: null, $inline-styles: null) {
+    @return url("data:image/svg+xml,\
+%3Csvg viewBox='0 0 #{$size} #{$size}' width='#{$size}px' height='#{$size}px' xmlns='http://www.w3.org/2000/svg'%3E\
+%3CforeignObject width='100%25' height='100%25'%3E\
+%3Cdiv class='c-o' xmlns='http://www.w3.org/1999/xhtml'%3E\
+#{$content}%3C/div%3E%3Cstyle%3E\
+.c-o,.c-i{position:absolute;left:0;top:0;right:0;bottom:0}\
+#{$inline-styles}%3C/style%3E%3C/foreignObject%3E%3C/svg%3E");
+}
+
+@function digit($n) {
+    @return "<div class='d d#{$n}'>\
+<div class='a'></div>\
+<div class='b e'></div>\
+<div class='b c'></div>\
+</div>";
+}
+
+@function create-digits($n) {
+    $arr: split($n);
+    $html: null;
+
+    @each $num in $arr {
+        $html: $html + digit($num);
+    }
+
+    @return $html;
+}
+
+@function create-series($n, $class, $contain-digits: false) {
+    $series: null;
+    $content: null;
+
+    @for $i from 0 through $n {
+        @if $contain-digits ==true {
+            $content: create-digits($i);
+        }
+
+        $series: $series + "<div class='#{$class}' style='--i:#{$i}'>#{$content}</div>";
+    }
+
+    @return '<div class="c-i" style="--n:#{$n}">#{$series}</div>';
+}

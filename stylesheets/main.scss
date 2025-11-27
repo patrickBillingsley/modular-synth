@@ -1,70 +1,6 @@
-/* -- START RESET -- */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-* {
-    margin: 0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    html {
-        interpolate-size: allow-keywords;
-    }
-}
-
-body {
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
-    display: block;
-    max-width: 100%;
-}
-
-input,
-button,
-textarea,
-select {
-    font: inherit;
-}
-
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    overflow-wrap: break-word;
-}
-
-p {
-    text-wrap: pretty;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    text-wrap: balance;
-}
-
-#root,
-#__next {
-    isolation: isolate;
-}
-
-/* -- END RESET -- */
+// Import dependencies
+@use 'reset';
+@use 'knob';
 
 // Variables
 $color-dark: #222;
@@ -117,4 +53,16 @@ label {
     &.playing {
         background-color: $color-purple;
     }
+}
+
+.knob {
+    @include knob.knob();
+
+    --outline-color: rgba(0, 100, 200, 0.5);
+    --outline-width: 3em;
+    --drag-duration: 500ms;
+    --drag-timing-func: cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    --knob-shadow: rgba(0, 0, 0, 0.6);
+    --knob-face-gradient: linear-gradient(#f1f1f1, #fff);
+    --knob-border-gradient: linear-gradient(#fff 34%, #d1d1d1);
 }

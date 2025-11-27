@@ -38,7 +38,15 @@ export default class Knob {
         })
     }
 
-    get id() { `${this.label}-knob` };
+    get id() { return `${this.label}-knob`; }
+
+    update = (target) => {
+        for (const data of ["min", "max", "value"]) {
+            if (this.element[data]) {
+                this.element.style.setProperty(`--${data}`, this.element[data]);
+            }
+        }
+    }
 
     build = () => {
         this.element = document.createElement("input");
@@ -51,7 +59,17 @@ export default class Knob {
             this.element.max = this.options.length - 1;
         }
 
-        this.element.oninput = ({ target: { value } }) => { this.onChange(value) };
+        this.element.oninput = ({ target }) => {
+            this.update(target);
+            this.onChange(target.value);
+        }
+
+        for (const event of ["input", "change"]) {
+            this.element.addEventListener(event, this.update);
+        }
+
+        // Initialize CSS custom properties before appending to DOM
+        this.update();
 
         const label = document.createElement("label");
         label.htmlFor = this.id;
