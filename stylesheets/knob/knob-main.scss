@@ -5,22 +5,14 @@
 
 @mixin knob($size: 533,
     $unit: 0.152vmin,
-    $ticks: 100,
-    $steps: 10,
     $angles: (full: 250,
         start: 55,
         negative-step: -0.6),
     $geometry: (knob-size: 300,
         knob-pseudo-size: 100,
         knob-tip-size: 9%,
-        knob-border-width: 1.6%,
-        ticks-radius: 38.5931,
-        ticks-width: 3,
-        ticks-height: 8,
-        ticks-step-height: 10),
+        knob-border-width: 1.6%),
     $colors: (knob-pointer: #282828,
-        tick: #a1a1a1,
-        step: #585656,
         shadow-dark: rgba(0, 0, 0, 0.45),
         shadow-light: rgba(255, 255, 255, 0.6)),
     $cursors: (drag: grab,
@@ -57,8 +49,7 @@
 
     background-image: create-shadows($size,
             map.get($geometry, "knob-size"),
-            $colors),
-        create-ticks(5260, $ticks, $steps, $angles, $colors, $geometry);
+            $colors);
     background-position: 0 0;
     background-size: 100% 100%;
     background-repeat: no-repeat;

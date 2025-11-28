@@ -2,29 +2,6 @@
 @use 'logic' as *;
 @use 'svg-utils' as *;
 
-@function create-ticks($size, $ticks, $steps, $angles, $colors, $geometry) {
-    $nstep: devide($ticks, $steps);
-    $calc-radius: calc(#{$size} * (#{map.get($geometry, "ticks-radius")} / 100) * 1px);
-    $style: '\
-.tick{--angle:calc((#{map.get($angles, "full")} / var(--n)) * var(--i) * 1deg);\
-position:absolute;\
-left:50%25;top:50%25;\
-width:#{map.get($geometry, "ticks-height")}0px;\
-height:#{map.get($geometry, "ticks-width")}0px;\
-background:#{rgb-color(map.get($colors, "tick"))};\
-border-radius:#{map.get($geometry, "ticks-step-height")}0px;\
-transform:translate(-50%25,-50%25) rotate(90deg) rotate(#{map.get($angles, "start")}deg) rotate(var(--angle)) translateX(#{$calc-radius}) translate(50%25);\
-opacity:0.73\
-}\
-.tick:nth-child(#{$nstep}n + 1){\
-background:#{rgb-color(map.get($colors, "step"))};\
-width:#{map.get($geometry, "ticks-step-height")}0px;\
-opacity:0.83\
-}';
-
-    @return svg-container($size, create-series($ticks, "tick"), $style);
-}
-
 @function create-shadows($size, $knob-size, $colors) {
     $style: '.c-i::before{\
 --s:#{$knob-size}px;\
