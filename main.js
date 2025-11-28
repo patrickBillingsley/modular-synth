@@ -7,8 +7,8 @@ window.Waveform = Waveform;
 
 window.addEventListener("mousedown", () => {
   new AudioService().initialize();
+  new Keyboard({
+    voices: 3,
+    polyphonic: false,
+  });
 }, { once: true });
-new Keyboard({
-  voices: 3,
-  polyphonic: false,
-});
