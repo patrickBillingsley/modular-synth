@@ -12,8 +12,7 @@ transform:translate(-50%25,-50%25);\
 width:calc(var(--s) - 2px);\
 height:calc(var(--s) - 2px);\
 border-radius:50%25;\
-box-shadow:0 56px 70px 8px #{rgb-color(map.get($colors, "shadow-dark"))},\
-0 -50px 45px 26px #{rgb-color(map.get($colors, "shadow-light"))}}';
+box-shadow:0 56px 70px 8px #{rgb-color(map.get($colors, "shadow-dark"))}}';
 
     @return svg-container($size, "%3Cdiv class='c-i'%3E%3C/div%3E", $style);
 }
