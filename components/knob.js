@@ -41,13 +41,19 @@ export default class Knob {
     get id() { return `${this.label}-knob`; }
 
     drawTicks(canvas, tickCount, isRotary) {
-        const size = 80;
+        // Calculate size in pixels from 5rem (assuming 16px base)
+        const remSize = 5;
+        const fontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+        const size = remSize * fontSize;
         const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
 
-        canvas.width = size;
-        canvas.height = size;
-        canvas.style.width = `${size}px`;
-        canvas.style.height = `${size}px`;
+        // Scale canvas for retina displays
+        canvas.width = size * dpr;
+        canvas.height = size * dpr;
+        canvas.style.width = `${remSize}rem`;
+        canvas.style.height = `${remSize}rem`;
+        ctx.scale(dpr, dpr);
 
         const centerX = size / 2;
         const centerY = size / 2;
@@ -57,6 +63,7 @@ export default class Knob {
         const startAngle = isRotary ? 90 : 55;
         const fullAngle = isRotary ? 180 : 250;
 
+        ctx.save();
         ctx.translate(centerX, centerY);
 
         for (let i = 0; i <= tickCount; i++) {
