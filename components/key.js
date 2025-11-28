@@ -38,12 +38,11 @@ export default class Key {
         if (!this.note.isFlat) return;
 
         const neighbor = this.#getLeftNeighbor();
-        const appPadding = parseFloat(getComputedStyle(document.body).padding);
 
         const element = document.getElementById(this.id);
         element.style.width = `${neighbor.width / 2}px`;
         element.style.height = `${neighbor.height * 0.7}px`;
-        element.style.left = `${neighbor.left - appPadding + (neighbor.width * 0.75)}px`;
+        element.style.left = `${neighbor.left + (neighbor.width * 0.75)}px`;
 
     }
 
