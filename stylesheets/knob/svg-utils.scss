@@ -10,35 +10,11 @@
 #{$inline-styles}%3C/style%3E%3C/foreignObject%3E%3C/svg%3E");
 }
 
-@function digit($n) {
-    @return "<div class='d d#{$n}'>\
-<div class='a'></div>\
-<div class='b e'></div>\
-<div class='b c'></div>\
-</div>";
-}
-
-@function create-digits($n) {
-    $arr: split($n);
-    $html: null;
-
-    @each $num in $arr {
-        $html: $html + digit($num);
-    }
-
-    @return $html;
-}
-
-@function create-series($n, $class, $contain-digits: false) {
+@function create-series($n, $class) {
     $series: null;
-    $content: null;
 
     @for $i from 0 through $n {
-        @if $contain-digits ==true {
-            $content: create-digits($i);
-        }
-
-        $series: $series + "<div class='#{$class}' style='--i:#{$i}'>#{$content}</div>";
+        $series: $series + "<div class='#{$class}' style='--i:#{$i}'></div>";
     }
 
     @return '<div class="c-i" style="--n:#{$n}">#{$series}</div>';

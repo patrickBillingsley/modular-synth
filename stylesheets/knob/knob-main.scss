@@ -15,26 +15,14 @@
         knob-tip-size: 9%,
         knob-border-width: 1.6%,
         ticks-radius: 38.5931,
-        digits-radius: 45.03726,
         ticks-width: 3,
         ticks-height: 8,
-        ticks-step-height: 10,
-        alt-dots: 10,
-        alt-offset-bottom: 13,
-        alt-offset-bottom-text: 12.5,
-        alt-offset-center: 18.78,
-        alt-offset-center-text: 18.28),
+        ticks-step-height: 10),
     $colors: (knob-pointer: #282828,
         tick: #a1a1a1,
         step: #585656,
-        digits: rgba(40, 40, 40, 0.859),
-        alt: #282828,
         shadow-dark: rgba(0, 0, 0, 0.45),
         shadow-light: rgba(255, 255, 255, 0.6)),
-    $hints: ("min",
-        "max"
-
-    ),
     $cursors: (drag: grab,
         dragging: grabbing)) {
     @include range-reset;
@@ -70,7 +58,6 @@
     background-image: create-shadows($size,
             map.get($geometry, "knob-size"),
             $colors),
-        create-alt(520, $colors, $geometry, $hints),
         create-ticks(5260, $ticks, $steps, $angles, $colors, $geometry);
     background-position: 0 0;
     background-size: 100% 100%;

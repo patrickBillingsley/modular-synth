@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'sass:list';
 @use 'logic' as *;
 @use 'svg-utils' as *;
 
@@ -24,106 +23,6 @@ opacity:0.83\
 }';
 
     @return svg-container($size, create-series($ticks, "tick"), $style);
-}
-
-@function create-digits-layer($size, $steps, $angles, $colors, $geometry) {
-    $calc-radius: calc(#{$size} * (#{map.get($geometry, "digits-radius")} / 100) * 1px);
-    $style: '\
-.s{\
---as:#{map.get($angles, "start")};\
---ae:#{map.get($angles, "negative-step")};\
---angle:calc(((#{map.get($angles, "full")} - (var(--ae) * 2)) / var(--n)) * var(--i) * 1deg);\
-position:absolute;\
-left:50%25;\
-top:50%25;\
-transform:translate(-50%25, -50%25) rotate(90deg)\
-rotate(calc((var(--as) + var(--ae)) * 1deg)) rotate(var(--angle))\
-translateX(#{$calc-radius}) rotate(-90deg)\
-rotate(calc((var(--as) + var(--ae)) * -1deg))\
-rotate(calc(var(--angle) * -1));\
-}\
-.d{\
---s:520px;\
---pt:polygon(9.2%25 0, 89.8%25 0, 68.2%25 13%25, 31.8%25 13%25);\
---ps:polygon(26%25 33%25, 26%25 76%25, -0.4%25 98.4%25, 0 94%25, 0 1.6%25);\
---pc:polygon(26.6%25 0, 73.4%25 0, 92%25 50%25, 73.4%25 100%25, 26.6%25 100%25, 8%25 50%25);\
---m:0;\
-\
-color:#{rgb-color(map.get($colors, "digits"))};position:relative;width:var(--s);height:calc(var(--s) * 1.5831818182);display:inline-block}\
-.d,.d div{border-radius:calc(var(--s) * 0.1066);overflow:hidden}\
-\
-.d::before,.d::after{content:"";clip-path:var(--pt)}\
-.d::before,.d::after,.d div,.d div::before,.d div::after{position:absolute;left:0;top:0;width:100%25;height:100%25;display:block}\
-.d::before,.d::after,.d .a,.d div::before,.d div::after{background:currentColor}\
-\
-.d .a{top:50%25;height:13%25;transform:translateY(-50%25);clip-path:var(--pc)}\
-.d .b {height:50%25}\
-.d .b::before,.d .b::after{content: "";clip-path: var(--ps)}\
-.d .b::after{transform:rotateY(180deg)}\
-.d .c,.d::after{transform:rotateX(180deg)}\
-.d .c{transform-origin:0 100%25}\
-\
-.d::before{opacity:var(--A,1)}\
-.e::after{opacity:var(--B,1)}\
-.c::after{opacity:var(--C,1)}\
-.d::after{opacity:var(--D,1)}\
-.c::before{opacity:var(--E,1)}\
-.e::before{opacity:var(--F,1)}\
-.a{opacity:var(--G, 1)}\
-\
-.d0{--G:var(--m)}\
-.d1{--m:0;--A:var(--m);--D:var(--m);--E:var(--m);--F:var(--m);--G:var(--m);margin-left:calc(var(--s) * -0.742)}\
-.d2,.d3,.d7{--F:var(--m)}\
-.d3,.d4,.d5,.d7,.d9{--E:var(--m)}\
-.d2{--C:var(--m)}\
-.d4{--A:var(--m);--D:var(--m)}\
-.d5,.d6{--B: var(--m)}\
-.d7{--D:var(--m);--G:var(--m)}\
-.s > .d:not(:last-of-type){margin-right:calc(var(--s) * 0.16)}';
-
-    @return svg-container($size, create-series($steps, "s", true), $style);
-}
-
-@function create-alt($size, $colors, $geometry, $hints) {
-    $style: ".c-i{color: #{rgb-color(map.get($colors, 'alt'))};\
---diameter:#{map.get($geometry, 'alt-dots')}px;\
---offset-bottom:#{map.get($geometry, 'alt-offset-bottom')}%25;\
---offset-bottom-text:#{map.get($geometry, 'alt-offset-bottom-text')}%25;\
---offset-center:#{map.get($geometry, 'alt-offset-center')}%25;\
---offset-center-text:#{map.get($geometry, 'alt-offset-center-text')}%25;\
-\
-background-image:radial-gradient(\
-circle at center,\
-currentColor calc((var(--diameter) * 0.5) - 1px),\
-transparent calc(var(--diameter) * 0.5)\
-),\
-radial-gradient(\
-circle at center,\
-currentColor calc((var(--diameter) * 0.5) - 1px),\
-transparent calc(var(--diameter) * 0.5)\
-);\
-background-position:left calc(50%25 + var(--offset-center)) bottom var(--offset-bottom),\
-left calc(50%25 - var(--offset-center)) bottom var(--offset-bottom);\
-background-size:var(--diameter) var(--diameter);\
-background-repeat:no-repeat;\
-opacity:0.9;\
-}\
-\
-.c-i::before,.c-i::after{\
-position:absolute;\
-left:calc(50%25 + (var(--sgn, 1) * var(--offset-center-text)));\
-bottom:var(--offset-bottom-text);\
-transform:translate(-50%25,100%25);\
-font-size:18.2px;\
-font-family:Arial, Helvetica, sans-serif;\
-font-weight:bold;\
-text-transform:uppercase;\
-}\
-\
-.c-i::before{--sgn:-1;content:'#{list.nth($hints, 1)}'}\
-.c-i::after {content:'#{list.nth($hints, 2)}'}";
-
-    @return svg-container($size, "%3Cdiv class='c-i'%3E%3C/div%3E", $style);
 }
 
 @function create-shadows($size, $knob-size, $colors) {

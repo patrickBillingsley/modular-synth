@@ -23,6 +23,7 @@ body {
 label {
     display: block;
     color: $color-dark;
+    text-align: center;
 }
 
 #keyboard {
@@ -67,15 +68,9 @@ label {
             knob-tip-size: 9%,
             knob-border-width: 1.6%,
             ticks-radius: 38.5931,
-            digits-radius: 45.03726,
             ticks-width: 12,
             ticks-height: 32,
-            ticks-step-height: 40,
-            alt-dots: 10,
-            alt-offset-bottom: 13,
-            alt-offset-bottom-text: 12.5,
-            alt-offset-center: 18.78,
-            alt-offset-center-text: 18.28));
+            ticks-step-height: 40));
 
     --outline-color: rgba(0, 100, 200, 0.5);
     --outline-width: 3em;
